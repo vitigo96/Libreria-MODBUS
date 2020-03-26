@@ -1,0 +1,32 @@
+#include <EtherCard.h>   
+#include <Modbus.h>
+#include <ModbusIP_ENC28J60.h>
+
+const int SENSOR_IREG=50;
+const int sensorAnalog =A0;
+ModbusIP mb;
+
+void setup() {
+Serial.begin(9600);// inicializamos el serial com
+
+//dirección MAC
+byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF,0xFE, 0xED}; 
+
+//dirección IP
+byte ip [] = {192,168,1,22};
+
+mb.config (mac,ip);// se confirma las direcciones 
+mb.addIreg(SENSOR_IREG);
+
+}
+
+void loop() {
+mb.task();// actualiza para el trabajo se realize 
+          // con normalidad
+          
+  // envía los valores del potenciometro 
+  mb.Ireg(SENSOR_IREG, analogRead(sensorAnalog));
+  
+//muestra en el monitor serie los valores del pot4
+  Serial.println(analogRead(sensorAnalog));
+}
